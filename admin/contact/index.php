@@ -24,6 +24,9 @@
     <table class="table mt-3 table-bordered table-striped">
         <thead>
             <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
                 <th>Description du Message</th>
                 <th>Date du Message</th>
                 <th>Action</th>
@@ -34,6 +37,9 @@
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>";
+                    echo "<td>" . $row['nom'] . "</td>";
+                    echo "<td>" . $row['prenom'] . "</td>";
+                    echo "<td>" . $row['email'] . "</td>";
                     echo "<td>" . $row['description_message'] . "</td>";
                     echo "<td>" . $row['date_message'] . "</td>";
                     echo "<td>
@@ -44,7 +50,7 @@
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='3'>Aucun Message trouvé.</td></tr>";
+                echo "<tr><td colspan='6'>Aucun Message trouvé.</td></tr>";
             }
             ?>
         </tbody>

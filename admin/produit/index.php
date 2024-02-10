@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $description_produit = htmlspecialchars($_POST['description_produit']);
     $prix_produit = floatval($_POST['prix_produit']);
     $caracteristique = $_POST['caracteristique'];
+    $id_famille = $_POST['famille'];
 
     // Traitement de l'upload de l'image
     $image_path = $_SERVER['DOCUMENT_ROOT'] . "/eng/assets/img/"; // Chemin où vous souhaitez enregistrer les images
@@ -38,9 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (move_uploaded_file($image_tmp_name, $image_path . $image_name)) {
             // L'image a été téléchargée avec succès, vous pouvez maintenant insérer les données dans la table produits
-            $sql = "INSERT INTO produits (nom_produit, date_produit, description_produit, url_img, prix_produit) VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO produits (nom_produit, date_produit, description_produit, url_img, prix_produit, id_famille) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssssd", $nom_produit, $date_produit, $description_produit, $image_name, $prix_produit);
+            $stmt->bind_param("ssssdi", $nom_produit, $date_produit, $description_produit, $image_name, $prix_produit, $id_famille);
 
             if ($stmt->execute()) {
                 $id_produit = $stmt->insert_id; // Récupérer l'ID du produit inséré
@@ -72,6 +73,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 // Récupérer les caractéristiques depuis la table caracteristiques
 $sql_caracteristiques = "SELECT * FROM caracteristiques";
 $result_caracteristiques = $conn->query($sql_caracteristiques);
+$sql_famille = "SELECT * FROM familles";
+$result_famille = $conn->query($sql_famille);
+
+
+
 // Récupérer les données du formulaire de modification
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['produit_id_modif'])) {
     $produit_id_modif = $_POST['produit_id_modif'];
@@ -143,7 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['produit_id_modif'])) 
                     echo "<td>" . $row_produit['description_produit'] . "</td>";
                     echo "<td>" . $row_produit['prix_produit'] . "</td>";
                     echo "<td>
-                    <button class='btn btn-info edit-button' data-toggle='modal' data-target='#modifierProduitModal' data-backdrop='static' data-id='" . $row_produit['id'] . "' data-nom='" . $row_produit['nom_produit'] . "' data-description='" . $row_produit['description_produit'] . "' data-prix='" . $row_produit['prix_produit'] . "'><i class='fa fa-edit'></i></button>
+                    <button class='btn btn-info edit-button' data-bs-toggle='modal' data-bs-target='#modifierProduitModal' data-backdrop='static' data-id='" . $row_produit['id'] . "' data-nom='" . $row_produit['nom_produit'] . "' data-description='" . $row_produit['description_produit'] . "' data-prix='" . $row_produit['prix_produit'] . "'><i class='fa fa-edit'></i></button>
 
                             <a href='index.php?delete_id=" . $row_produit['id'] . "' class='btn btn-danger'><i class='fa fa-trash'></i></a>
                         </td>";
@@ -185,6 +191,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['produit_id_modif'])) 
                             <input type="number" class="form-control" name="prix_produit" id="prix_produit" placeholder="Prix du produit" required>
                         </div>
                         <div class="form-group mb-2">
+                            <label for="famille">Famille</label>
+                            <select class="form-control" name="famille" id="famille" required>
+                                <?php
+                                if ($result_famille->num_rows > 0) {
+                                    while ($row_famille = $result_famille->fetch_assoc()) {
+                                        echo "<option value='" . $row_famille['id'] . "'>" . $row_famille['titre_famille'] . "</option>";
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
                             <label for="caracteristique">Caractéristiques</label>
                             <select multiple class="form-control" name="caracteristique[]" id="caracteristique" required>
                                 <?php
@@ -206,61 +224,98 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['produit_id_modif'])) 
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Modal pour la modification de produit -->
-    <div class="modal fade" id="modifierProduitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <!-- Formulaire de modification -->
-                <form action="edit_produit.php" method="post">
-                    <!-- Contenu du formulaire de modification -->
-                    <div class="modal-body">
-                        <!-- Champ caché pour stocker l'ID du produit à modifier -->
-                        <input type="hidden" id="produit_id_modif" name="produit_id_modif">
+<!-- Modal pour la modification de produit -->
+<div class="modal fade" id="modifierProduitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- Formulaire de modification -->
+            <!-- Formulaire de modification -->
+            <form action="edit_produit.php" method="post">
+                <!-- Contenu du formulaire de modification -->
+                <div class="modal-body">
+                    <!-- Champ caché pour stocker l'ID du produit à modifier -->
+                    <input type="hidden" id="produit_id_modif" name="produit_id_modif">
 
-                        <div class="form-group mb-2">
-                            <label for="nom_produit_modif">Nom du Produit</label>
-                            <input type="text" class="form-control" name="nom_produit_modif" id="nom_produit_modif" placeholder="Nom du produit" required>
-                        </div>
-                        <!-- Ajoutez d'autres champs de modification ici -->
-                        <div class="form-group mb-2">
-                            <label for="description_produit_modif">Description du Produit</label>
-                            <textarea class="form-control" name="description_produit_modif" id="description_produit_modif" rows="4" placeholder="Description du produit" required></textarea>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label for="prix_produit_modif">Prix du Produit</label>
-                            <input type="number" class="form-control" name="prix_produit_modif" id="prix_produit_modif" placeholder="Prix du produit" required>
-                        </div>
+                    <div class="form-group mb-2">
+                        <label for="nom_produit_modif">Nom du Produit</label>
+                        <input type="text" class="form-control" name="nom_produit_modif" id="nom_produit_modif" placeholder="Nom du produit" required>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                        <input type="submit" class="btn btn-primary" value="Enregistrer les modifications">
+
+                    <div class="form-group mb-2">
+                        <label for="description_produit_modif">Description du Produit</label>
+                        <textarea class="form-control" name="description_produit_modif" id="description_produit_modif" rows="4" placeholder="Description du produit" required></textarea>
                     </div>
-                </form>
-            </div>
+
+                    <div class="form-group mb-2">
+                        <label for="prix_produit_modif">Prix du Produit</label>
+                        <input type="number" class="form-control" name="prix_produit_modif" id="prix_produit_modif" placeholder="Prix du produit" required>
+                    </div>
+
+                    <!-- Ajoutez d'autres champs de modification ici (famille, caractéristiques, etc.) -->
+                    <!-- Exemple de champ pour la famille -->
+                    <div class="form-group mb-2">
+                        <label for="famille_modif">Famille</label>
+                        <select class="form-control" name="famille_modif" id="famille_modif" required>
+                            <?php
+                            // Utilisez la variable $row_produit pour récupérer la famille du produit à modifier
+                            // Assurez-vous que $row_produit contient les données du produit lors de l'édition
+                            // Utilisez une boucle pour afficher toutes les options de famille
+                            while ($row_famille = $result_famille->fetch_assoc()) {
+                                echo "<option value='" . $row_famille['id'] . "'>" . $row_famille['titre_famille'] . "</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <!-- Exemple de champ pour les caractéristiques -->
+                    <div class="form-group mb-2">
+                        <label for="caracteristique_modif">Caractéristiques</label>
+                        <select multiple class="form-control" name="caracteristique_modif[]" id="caracteristique_modif" required>
+                            <?php
+                            // Utilisez la variable $row_produit pour récupérer les caractéristiques du produit à modifier
+                            // Assurez-vous que $row_produit contient les données du produit lors de l'édition
+                            // Utilisez une boucle pour afficher toutes les options de caractéristiques
+                            while ($row_caracteristique = $result_caracteristiques->fetch_assoc()) {
+                                echo "<option value='" . $row_caracteristique['id'] . "'>" . $row_caracteristique['libelle_carac'] . "</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <input type="submit" class="btn btn-primary" value="Enregistrer les modifications">
+                </div>
+            </form>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $(".edit-button").click(function() {
-                var id = $(this).data("id");
-                var nom = $(this).data("nom");
-                var description = $(this).data("description");
-                var prix = $(this).data("prix");
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".edit-button").click(function() {
+            var id = $(this).data("id");
+            var nom = $(this).data("nom");
+            var description = $(this).data("description");
+            var prix = $(this).data("prix");
 
-                // Remplir les champs du formulaire avec les données du produit
-                $("#produit_id_modif").val(id);
-                $("#nom_produit_modif").val(nom);
-                $("#description_produit_modif").val(description);
-                $("#prix_produit_modif").val(prix);
-                console.log(id, nom, description, prix);
-            });
+            // Remplir les champs du formulaire avec les données du produit
+            $("#produit_id_modif").val(id);
+            $("#nom_produit_modif").val(nom);
+            $("#description_produit_modif").val(description);
+            $("#prix_produit_modif").val(prix);
 
+            // Ouvrir le modal de modification
+            $("#modifierProduitModal").modal("show");
         });
-    </script>
+    });
+</script>
 
 
-    <?php include("../layouts/footer.php"); ?>
+<?php include("../layouts/footer.php"); ?>

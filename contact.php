@@ -19,7 +19,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENG | ADMIN</title>
+    <title>ENG | Contact</title>
     <link rel="stylesheet" href="/eng/assets/css/bootstrap.min.css">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -98,9 +98,9 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                             <!-- You may include additional dropdown items here -->
                             <a class="dropdown-item" href="/eng/historique-eng.php">Historique ENG</a>
                             <a class="dropdown-item" href="/eng/organisation-entreprise.php">Organisation de l'entreprise</a>
-                             
+
                             <a class="dropdown-item" href="/eng/nos-missions.php">Nos missions</a>
-                             
+
                             <a class="dropdown-item" href="/eng/qualite.php">Qualité</a>
                             <a class="dropdown-item" href="/eng/conditions-vente.php">Conditions de vente</a>
                         </div>
@@ -114,152 +114,6 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
         </div>
     </nav>
     <!-- end navbar -->
-
-
-    <div id="productCarousel" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-            <?php
-
-            $firstItem = true; // To mark the first item as active
-            while ($row = mysqli_fetch_assoc($resultProduits)) {
-                // Use $row to get product details
-                echo '<div class="carousel-item' . ($firstItem ? ' active' : '') . '">
-                        <img src="/eng/assets/img/' . $row['url_img'] . '" class="d-block w-100" alt="' . $row['nom_produit'] . '">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>' . $row['nom_produit'] . '</h5>
-                            <p>' . $row['description_produit'] . '</p>
-                            <p>Prix: ' . $row['prix_produit'] . '</p>
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#devisModal">Demander Devis</button>
-                        </div>
-                    </div>';
-
-                $firstItem = false; // After the first iteration, set $firstItem to false
-            }
-            ?>
-        </div>
-        <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
-
-    <!-- Bootstrap Modal -->
-    <div class="modal fade" id="devisModal" tabindex="-1" role="dialog" aria-labelledby="devisModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="devisModalLabel">Demander un devis</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <!-- Client details fields -->
-                        <div class="form-group">
-                            <label for="nomClient">Nom</label>
-                            <input type="text" class="form-control" id="nomClient" name="nomClient" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="prenomClient">Prénom</label>
-                            <input type="text" class="form-control" id="prenomClient" name="prenomClient" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="emailClient">Email</label>
-                            <input type="email" class="form-control" id="emailClient" name="emailClient" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="telClient">Téléphone</label>
-                            <input type="tel" class="form-control" id="telClient" name="telClient" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="adresseClient">Adresse</label>
-                            <input type="text" class="form-control" id="adresseClient" name="adresseClient" required>
-                        </div>
-
-                        <!-- Category select dropdown -->
-                        <div class="form-group">
-                            <label for="categorieClient">Catégorie</label>
-                            <select class="form-control" id="categorieClient" name="categorieClient">
-                                <?php
-
-                                while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
-                                    echo '<option value="' . $categoryRow['id'] . '">' . $categoryRow['nom_cat'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-
-                        <!-- Add other form fields as needed -->
-
-                        <button type="submit" class="btn btn-primary">Envoyer</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Products Section -->
-    <section id="products" class="py-5">
-        <div class="container">
-            <h2 class="text-center">Nos Produits</h2>
-            <div class="row">
-                <?php
-                $sqlProduits = "SELECT * FROM produits";
-                $resultProduits = $conn->query($sqlProduits);
-
-                if ($resultProduits->num_rows > 0) {
-                    while ($rowProduit = $resultProduits->fetch_assoc()) {
-                        echo "<div class='col-md-3 mb-4 product-card'>";
-                        echo "<div class='card'>";
-                        if (!empty($rowProduit['url_img'])) {
-                            echo "<img src='/eng/assets/img/" . $rowProduit['url_img'] . "' alt='Image du produit' class='card-img-top img-fluid'>";
-                        }
-                        echo "<div class='card-body'>";
-                        echo "<h4 class='card-title'>" . $rowProduit['nom_produit'] . "</h4>";
-                        echo "<p class='card-text'>" . $rowProduit['description_produit'] . "</p>";
-                        echo "<p class='card-text'>Prix : $" . $rowProduit['prix_produit'] . "</p>";
-                        echo "</div></div></div>";
-                    }
-                } else {
-                    echo "Aucun produit trouvé.";
-                }
-                ?>
-            </div>
-        </div>
-    </section>
-
-    <!-- Families Section with Filter -->
-    <section id="families" class="bg-light py-5">
-        <div class="container">
-            <h2 class="text-center">Familles de Produits</h2>
-            <div class="row">
-                <?php
-                $sqlFamilles = "SELECT * FROM familles";
-                $resultFamilles = $conn->query($sqlFamilles);
-                if ($resultFamilles->num_rows > 0) {
-                    while ($rowFamille = $resultFamilles->fetch_assoc()) {
-                        echo "<div class='col-md-4 mb-4 family-card'>";
-                        echo "<div class='card'>";
-                        if (!empty($rowFamille['image_famille'])) {
-                            echo "<img src='/eng/assets/img/" . $rowFamille['image_famille'] . "' alt='Image de la famille' class='card-img-top img-fluid'>";
-                        }
-                        echo "<div class='card-body'>";
-                        echo "<h4 class='card-title'>" . $rowFamille['titre_famille'] . "</h4>";
-                        echo "</div></div></div>";
-                    }
-                } else {
-                    echo "Aucune famille trouvée.";
-                }
-                ?>
-            </div>
-        </div>
-    </section>
-
     <!-- contact -->
     <section id="contact">
         <div class="container w-50 pt-5 pb-5">
