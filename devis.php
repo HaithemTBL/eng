@@ -124,7 +124,7 @@
                 // Sauvegarde le PDF dans un fichier
                 $pdf->Output($pdfFilePath, 'F');
 
-                echo "<p>PDF généré avec succès. <a href='$pdfFilePath' download>Télécharger le PDF</a></p>";
+                echo "<p class='text-center'>PDF généré avec succès. <a href='$pdfFilePath' download>Télécharger le PDF</a></p>";
             } else {
                 echo "<div class='alert alert-danger'>Erreur lors de l'enregistrement du devis : " . $conn->error . "</div>";
             }
