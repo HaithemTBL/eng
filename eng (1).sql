@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : sam. 10 fév. 2024 à 18:07
+-- Généré le : sam. 10 fév. 2024 à 18:25
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -67,6 +67,15 @@ CREATE TABLE `avoir2` (
   `valeur` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `avoir2`
+--
+
+INSERT INTO `avoir2` (`id`, `id_produit`, `id_carac`, `valeur`) VALUES
+(1, 1, 1, ''),
+(5, 2, 2, ''),
+(6, 3, 8, '');
+
 -- --------------------------------------------------------
 
 --
@@ -78,6 +87,20 @@ CREATE TABLE `caracteristiques` (
   `libelle_carac` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `caracteristiques`
+--
+
+INSERT INTO `caracteristiques` (`id`, `libelle_carac`) VALUES
+(1, ' 0/4 mm'),
+(2, ' 0/40 mm'),
+(3, '0/1000 mm'),
+(4, ' 0/500 mm'),
+(5, ' 0/200 à 0/300 mm'),
+(6, '0/50 mm'),
+(7, '16/25 mm'),
+(8, 'Fins');
+
 -- --------------------------------------------------------
 
 --
@@ -88,6 +111,15 @@ CREATE TABLE `categories` (
   `id` int(11) NOT NULL,
   `nom_cat` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `categories`
+--
+
+INSERT INTO `categories` (`id`, `nom_cat`) VALUES
+(1, 'Entreprise Etatique'),
+(2, 'Entreprise Privé'),
+(3, 'Particulier');
 
 -- --------------------------------------------------------
 
@@ -129,6 +161,15 @@ CREATE TABLE `familles` (
   `image_famille` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `familles`
+--
+
+INSERT INTO `familles` (`id`, `titre_famille`, `image_famille`) VALUES
+(1, 'Granulats', 'granulats.jpg'),
+(2, 'Carbonate de Calcium', 'téléchargement.jpg'),
+(3, 'Pierre Ornementale', 'téléchargement (1).jpg');
+
 -- --------------------------------------------------------
 
 --
@@ -159,6 +200,15 @@ CREATE TABLE `produits` (
   `prix_produit` decimal(10,2) NOT NULL,
   `id_famille` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `produits`
+--
+
+INSERT INTO `produits` (`id`, `nom_produit`, `date_produit`, `description_produit`, `url_img`, `prix_produit`, `id_famille`) VALUES
+(1, 'Sable', '0000-00-00', 'Caractéristiques : Granulométrie : de 0 à 4 mm. Couleur : Gris - bleu dominant avec nuances en fonction du site de production. Forme : Concassé.', 'téléchargement (2).jpg', 850.00, 1),
+(2, 'Precribles Produits Scalpages', '2023-01-01', 'Precribles produits scalpages, Enrochement, Tout venant carriére, Grave Naturelle ... Precribles Produits Scalpages,', 'téléchargement (3).jpg', 300.00, 1),
+(3, 'ALCAL UF 20 BIG BAG ( en Gros )', '2023-01-01', 'CAL UF 5 BIG BAG ( en Gros ), Ultra fins, 0 DA, 30-11--0001. DEPOT GUE DE ..', 'téléchargement (4).jpg', 100.00, 2);
 
 --
 -- Index pour les tables déchargées
@@ -252,19 +302,19 @@ ALTER TABLE `avoir1`
 -- AUTO_INCREMENT pour la table `avoir2`
 --
 ALTER TABLE `avoir2`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT pour la table `caracteristiques`
 --
 ALTER TABLE `caracteristiques`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT pour la table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `client`
@@ -282,7 +332,7 @@ ALTER TABLE `devis`
 -- AUTO_INCREMENT pour la table `familles`
 --
 ALTER TABLE `familles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `messages`
@@ -294,7 +344,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT pour la table `produits`
 --
 ALTER TABLE `produits`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Contraintes pour les tables déchargées
