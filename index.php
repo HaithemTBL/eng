@@ -130,7 +130,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                             <h5>' . $row['nom_produit'] . '</h5>
                             <p>' . $row['description_produit'] . '</p>
                             <p>Prix: ' . $row['prix_produit'] . '</p>
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#devisModal">Demander Devis</button>
+                            <a href="#products" class="btn btn-primary">Demander Devis</a>
                         </div>
                     </div>';
 

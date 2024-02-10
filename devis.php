@@ -42,6 +42,21 @@
                 // Insertion dans la table avoir1
                 $idProduit = mysqli_real_escape_string($conn, $_POST['productID']);
                 $quantite = mysqli_real_escape_string($conn, $_POST['quantite']);
+                // $nom_produit = "SELECT nom_produit FROM produits WHERE id=$idProduit";
+
+                // Exécution de la requête SQL pour récupérer le nom du produit
+                $nom_produit_query = "SELECT nom_produit FROM produits WHERE id=$idProduit";
+                $result = $conn->query($nom_produit_query);
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $nom_produit = $row['nom_produit'];
+                        // Utilisez $nom_produit comme vous le souhaitez
+                    }
+                } else {
+                    echo "<div class='alert alert-warning'>Aucun produit trouvé avec l'ID spécifié</div>";
+                }
+
 
                 $insertAvoirQuery = "INSERT INTO avoir1 (id_produit, id_devis, quantite) 
                         VALUES ('$idProduit', '$devisId', '$quantite')";
@@ -92,6 +107,12 @@
 
                 $pdf->Cell(60, 10, 'Adresse du client:', 1, 0, 'L', true);
                 $pdf->Cell(0, 10, utf8_decode($adresseClient), 1, 1);
+
+                $pdf->Cell(60, 10, 'Produit:', 1, 0, 'L', true);
+                $pdf->Cell(0, 10, utf8_decode($nom_produit), 1, 1);
+
+                $pdf->Cell(60, 10, 'Quantite:', 1, 0, 'L', true);
+                $pdf->Cell(0, 10, utf8_decode($quantite), 1, 1);
 
                 $pdfFilePath = 'assets/devis/' . 'devis_' . $clientId . '.pdf';
                 $pdfDirectory = dirname($pdfFilePath);
