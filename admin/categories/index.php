@@ -14,7 +14,18 @@ if (isset($_POST['nom_cat'])) {
         echo '<div class="alert alert-danger">Erreur lors de l\'ajout de la catégorie : ' . $conn->error . '</div>';
     }
 }
-
+// Traitement de la suppression d'un client
+if (isset($_GET['delete'])) {
+    $delete_id = $_GET['delete'];
+    $sql_delete_client = "DELETE FROM categories WHERE id = ?";
+    $stmt = $conn->prepare($sql_delete_client);
+    $stmt->bind_param("i", $delete_id);
+    if ($stmt->execute()) {
+        echo '<div class="alert alert-success">categories supprimé avec succès.</div>';
+    } else {
+        echo '<div class="alert alert-danger">Erreur lors de la suppression du categories : ' . $conn->error . '</div>';
+    }
+}
 // Récupérer les catégories depuis la table categories
 $sql = "SELECT * FROM categories";
 $result = $conn->query($sql);

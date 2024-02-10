@@ -14,7 +14,18 @@ if (isset($_POST['libelle_carac'])) {
         echo '<div class="alert alert-danger">Erreur lors de l\'ajout de la caractéristique : ' . $conn->error . '</div>';
     }
 }
-
+// Traitement de la suppression d'un client
+if (isset($_GET['delete'])) {
+    $delete_id = $_GET['delete'];
+    $sql_delete_client = "DELETE FROM caracteristiques WHERE id = ?";
+    $stmt = $conn->prepare($sql_delete_client);
+    $stmt->bind_param("i", $delete_id);
+    if ($stmt->execute()) {
+        echo '<div class="alert alert-success">caracteristique supprimé avec succès.</div>';
+    } else {
+        echo '<div class="alert alert-danger">Erreur lors de la suppression du caracteristique : ' . $conn->error . '</div>';
+    }
+}
 // Récupérer les caractéristiques depuis la table caracteristiques
 $sql = "SELECT * FROM caracteristiques";
 $result = $conn->query($sql);
