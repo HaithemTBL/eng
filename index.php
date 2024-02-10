@@ -12,6 +12,7 @@ $resultFamilles = $conn->query($sqlFamilles);
 $categoryQuery = "SELECT `id`, `nom_cat` FROM `categories`";
 $categoryResult = mysqli_query($conn, $categoryQuery);
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +20,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENG | ADMIN</title>
+    <title>ENG | Acceuil</title>
     <link rel="stylesheet" href="/eng/assets/css/bootstrap.min.css">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -98,9 +99,9 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                             <!-- You may include additional dropdown items here -->
                             <a class="dropdown-item" href="/eng/historique-eng.php">Historique ENG</a>
                             <a class="dropdown-item" href="/eng/organisation-entreprise.php">Organisation de l'entreprise</a>
-                             
+
                             <a class="dropdown-item" href="/eng/nos-missions.php">Nos missions</a>
-                             
+
                             <a class="dropdown-item" href="/eng/qualite.php">Qualité</a>
                             <a class="dropdown-item" href="/eng/conditions-vente.php">Conditions de vente</a>
                         </div>
@@ -147,61 +148,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
         </a>
     </div>
 
-    <!-- Bootstrap Modal -->
-    <div class="modal fade" id="devisModal" tabindex="-1" role="dialog" aria-labelledby="devisModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="devisModalLabel">Demander un devis</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <!-- Client details fields -->
-                        <div class="form-group">
-                            <label for="nomClient">Nom</label>
-                            <input type="text" class="form-control" id="nomClient" name="nomClient" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="prenomClient">Prénom</label>
-                            <input type="text" class="form-control" id="prenomClient" name="prenomClient" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="emailClient">Email</label>
-                            <input type="email" class="form-control" id="emailClient" name="emailClient" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="telClient">Téléphone</label>
-                            <input type="tel" class="form-control" id="telClient" name="telClient" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="adresseClient">Adresse</label>
-                            <input type="text" class="form-control" id="adresseClient" name="adresseClient" required>
-                        </div>
 
-                        <!-- Category select dropdown -->
-                        <div class="form-group">
-                            <label for="categorieClient">Catégorie</label>
-                            <select class="form-control" id="categorieClient" name="categorieClient">
-                                <?php
-
-                                while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
-                                    echo '<option value="' . $categoryRow['id'] . '">' . $categoryRow['nom_cat'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-
-                        <!-- Add other form fields as needed -->
-
-                        <button type="submit" class="btn btn-primary">Envoyer</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Products Section -->
     <section id="products" class="py-5">
@@ -223,13 +170,81 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                         echo "<h4 class='card-title'>" . $rowProduit['nom_produit'] . "</h4>";
                         echo "<p class='card-text'>" . $rowProduit['description_produit'] . "</p>";
                         echo "<p class='card-text'>Prix : $" . $rowProduit['prix_produit'] . "</p>";
+                        // Inside the while loop for displaying products
+                        echo "<button class='btn btn-primary btn-demande-devis' data-toggle='modal' data-target='#devisModal" . $rowProduit['id'] . "'>Demande Devis</button>";
+
                         echo "</div></div></div>";
+                        echo "<div class='modal fade' id='devisModal" . $rowProduit['id'] . "' tabindex='-1' role='dialog' aria-labelledby='devisModalLabel" . $rowProduit['id'] . "' aria-hidden='true'>'";
+                ?>
+                        <!-- Bootstrap Modal -->
+
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="devisModalLabel">Demander un devis</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" action="devis.php">
+                                        <input type="hidden" name="productID" value="<?php echo $rowProduit['id']; ?>">
+
+                                        <!-- Client details fields -->
+                                        <div class="form-group">
+                                            <label for="nomClient">Nom</label>
+                                            <input type="text" class="form-control" id="nomClient" name="nomClient" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="prenomClient">Prénom</label>
+                                            <input type="text" class="form-control" id="prenomClient" name="prenomClient" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="emailClient">Email</label>
+                                            <input type="email" class="form-control" id="emailClient" name="emailClient" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="telClient">Téléphone</label>
+                                            <input type="tel" class="form-control" id="telClient" name="telClient" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="adresseClient">Adresse</label>
+                                            <input type="text" class="form-control" id="adresseClient" name="adresseClient" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="quantite">Quantité</label>
+                                            <input type="number" class="form-control" id="quantite" name="quantite" required>
+                                        </div>
+
+                                        <!-- Category select dropdown -->
+                                        <div class="form-group">
+                                            <label for="categorieClient">Catégorie</label>
+                                            <select class="form-control" id="categorieClient" name="categorieClient">
+                                                <?php
+                                                $categoryQuery = "SELECT `id`, `nom_cat` FROM `categories`";
+                                                $categoryResult = mysqli_query($conn, $categoryQuery);
+                                                while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
+                                                    echo '<option value="' . $categoryRow['id'] . '">' . $categoryRow['nom_cat'] . '</option>';
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+
+                                        <!-- Add other form fields as needed -->
+
+                                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+    <?php
                     }
                 } else {
                     echo "Aucun produit trouvé.";
                 }
-                ?>
-            </div>
+    ?>
+        </div>
         </div>
     </section>
 
@@ -264,10 +279,37 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
     <section id="contact">
         <div class="container w-50 pt-5 pb-5">
             <h2 style="text-align:center">Contact</h2>
+            <?php
+            // Vérifier si le formulaire a été soumis
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Récupérer les valeurs du formulaire
+                $contact_name = $_POST['contact_name'];
+                $contact_email = $_POST['contact_email'];
+                $contact_phone = $_POST['contact_phone'];
+                $contact_message = $_POST['contact_message'];
+                $contact_prenom = $_POST['contact_prenom'];
+
+                // Préparer la requête SQL pour insérer les données dans la table 'messages'
+                $insertQuery = "INSERT INTO messages (nom, prenom, email, description_message, date_message) 
+                    VALUES ('$contact_name', '$contact_prenom', '$contact_email', '$contact_message', NOW())";
+
+                // Exécuter la requête
+                if ($conn->query($insertQuery) === TRUE) {
+                    // Utiliser une classe Bootstrap pour styliser le message
+                    echo "<div class='alert alert-success'>Message enregistré avec succès.</div>";
+                } else {
+                    echo "<div class='alert alert-danger'>Erreur lors de l'enregistrement du message : " . $conn->error . "</div>";
+                }
+            }
+            ?>
             <form action="" method="POST">
                 <div class="form-group">
                     <label for="name" class="form-label">Nom</label>
                     <input type="text" class="form-control" id="name" name="contact_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="prenom" class="form-label">Prenom</label>
+                    <input type="text" class="form-control" id="prenom" name="contact_prenom" required>
                 </div>
                 <div class="form-group">
                     <label for="email" class="form-label">Adresse email</label>
