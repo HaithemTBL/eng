@@ -149,7 +149,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['produit_id_modif'])) 
                     echo "<td>" . $row_produit['description_produit'] . "</td>";
                     echo "<td>" . $row_produit['prix_produit'] . "</td>";
                     echo "<td>
-                    <button class='btn btn-info edit-button' data-bs-toggle='modal' data-bs-target='#modifierProduitModal' data-backdrop='static' data-id='" . $row_produit['id'] . "' data-nom='" . $row_produit['nom_produit'] . "' data-description='" . $row_produit['description_produit'] . "' data-prix='" . $row_produit['prix_produit'] . "'><i class='fa fa-edit'></i></button>
 
                             <a href='edit.php?id=" . $row_produit['id'] . "' class='btn btn-info'><i class='fa fa-pen'></i></a>
                             <a href='index.php?delete_id=" . $row_produit['id'] . "' class='btn btn-danger'><i class='fa fa-trash'></i></a>
@@ -227,75 +226,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['produit_id_modif'])) 
     </div>
 </div>
 
-<!-- Modal pour la modification de produit -->
-<div class="modal fade" id="modifierProduitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <!-- Formulaire de modification -->
-            <!-- Formulaire de modification -->
-            <form action="edit_produit.php" method="post">
-                <!-- Contenu du formulaire de modification -->
-                <div class="modal-body">
-                    <!-- Champ caché pour stocker l'ID du produit à modifier -->
-                    <input type="hidden" id="produit_id_modif" name="produit_id_modif">
-
-                    <div class="form-group mb-2">
-                        <label for="nom_produit_modif">Nom du Produit</label>
-                        <input type="text" class="form-control" name="nom_produit_modif" id="nom_produit_modif" placeholder="Nom du produit" required>
-                    </div>
-
-                    <div class="form-group mb-2">
-                        <label for="description_produit_modif">Description du Produit</label>
-                        <textarea class="form-control" name="description_produit_modif" id="description_produit_modif" rows="4" placeholder="Description du produit" required></textarea>
-                    </div>
-
-                    <div class="form-group mb-2">
-                        <label for="prix_produit_modif">Prix du Produit</label>
-                        <input type="number" class="form-control" name="prix_produit_modif" id="prix_produit_modif" placeholder="Prix du produit" required>
-                    </div>
-
-                    <div class="form-group mb-2">
-                        <label for="famille_modif">Famille</label>
-                        <select class="form-control" name="famille_modif" id="famille_modif" required>
-                            <?php
-                            $sql_famille = "SELECT * FROM familles";
-                            $result_famille = $conn->query($sql_famille);
-                            // Utilisez la variable $row_produit pour récupérer la famille du produit à modifier
-                            // Assurez-vous que $row_produit contient les données du produit lors de l'édition
-                            // Utilisez une boucle pour afficher toutes les options de famille
-                            while ($row_famille = $result_famille->fetch_assoc()) {
-                                echo "<option value='" . $row_famille['id'] . "'>" . $row_famille['titre_famille'] . "</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-
-                    <!-- Exemple de champ pour les caractéristiques -->
-                    <div class="form-group mb-2">
-                        <label for="caracteristique_modif">Caractéristiques</label>
-                        <select multiple class="form-control" name="caracteristique_modif[]" id="caracteristique_modif" required>
-                            <?php
-                            $sql_caracteristiques = "SELECT * FROM caracteristiques";
-                            $result_caracteristiques = $conn->query($sql_caracteristiques);
-                            // Utilisez la variable $row_produit pour récupérer les caractéristiques du produit à modifier
-                            // Assurez-vous que $row_produit contient les données du produit lors de l'édition
-                            // Utilisez une boucle pour afficher toutes les options de caractéristiques
-                            while ($row_caracteristique = $result_caracteristiques->fetch_assoc()) {
-                                echo "<option value='" . $row_caracteristique['id'] . "'>" . $row_caracteristique['libelle_carac'] . "</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <input type="submit" class="btn btn-primary" value="Enregistrer les modifications">
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
