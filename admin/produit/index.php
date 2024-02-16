@@ -151,6 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['produit_id_modif'])) 
                     echo "<td>
                     <button class='btn btn-info edit-button' data-bs-toggle='modal' data-bs-target='#modifierProduitModal' data-backdrop='static' data-id='" . $row_produit['id'] . "' data-nom='" . $row_produit['nom_produit'] . "' data-description='" . $row_produit['description_produit'] . "' data-prix='" . $row_produit['prix_produit'] . "'><i class='fa fa-edit'></i></button>
 
+                            <a href='edit.php?id=" . $row_produit['id'] . "' class='btn btn-info'><i class='fa fa-pen'></i></a>
                             <a href='index.php?delete_id=" . $row_produit['id'] . "' class='btn btn-danger'><i class='fa fa-trash'></i></a>
                         </td>";
                     echo "</tr>";
@@ -253,12 +254,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['produit_id_modif'])) 
                         <input type="number" class="form-control" name="prix_produit_modif" id="prix_produit_modif" placeholder="Prix du produit" required>
                     </div>
 
-                    <!-- Ajoutez d'autres champs de modification ici (famille, caractéristiques, etc.) -->
-                    <!-- Exemple de champ pour la famille -->
                     <div class="form-group mb-2">
                         <label for="famille_modif">Famille</label>
                         <select class="form-control" name="famille_modif" id="famille_modif" required>
                             <?php
+                            $sql_famille = "SELECT * FROM familles";
+                            $result_famille = $conn->query($sql_famille);
                             // Utilisez la variable $row_produit pour récupérer la famille du produit à modifier
                             // Assurez-vous que $row_produit contient les données du produit lors de l'édition
                             // Utilisez une boucle pour afficher toutes les options de famille
@@ -274,6 +275,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['produit_id_modif'])) 
                         <label for="caracteristique_modif">Caractéristiques</label>
                         <select multiple class="form-control" name="caracteristique_modif[]" id="caracteristique_modif" required>
                             <?php
+                            $sql_caracteristiques = "SELECT * FROM caracteristiques";
+                            $result_caracteristiques = $conn->query($sql_caracteristiques);
                             // Utilisez la variable $row_produit pour récupérer les caractéristiques du produit à modifier
                             // Assurez-vous que $row_produit contient les données du produit lors de l'édition
                             // Utilisez une boucle pour afficher toutes les options de caractéristiques
